@@ -1,14 +1,15 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox
+import customtkinter as ctkt  # Import CustomTkinter
+from customtkinter import filedialog, messagebox
 import pandas as pd
 
 # Initialize GUI
-root = tk.Tk()
-root.title("Excel/CSV File Comparator")
+root = ctkt.CTk()
 root.geometry("400x300")
+root.title("Excel/CSV File Comparator")
 
 # Global variables to hold file paths
 file_paths = []
+
 
 # Function to upload files
 def upload_file():
@@ -17,18 +18,18 @@ def upload_file():
         file_paths.append(filepath)
         lbl_file.config(text="\n".join(file_paths))
 
+
 # Function to process and compare files
 def process_files():
     if len(file_paths) != 3:
         messagebox.showerror("Error", "Please upload exactly three files.")
         return
-    
+
     identifier_column = entry_column.get()
     if not identifier_column:
         messagebox.showerror("Error", "Please specify an identifier column.")
         return
 
-    # Load files and compare
     try:
         dfs = [pd.read_excel(fp) if fp.endswith('.xlsx') else pd.read_csv(fp) for fp in file_paths]
         unique_entries = pd.concat(dfs).drop_duplicates(subset=[identifier_column], keep=False)
@@ -37,20 +38,32 @@ def process_files():
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
-# GUI Components
-btn_upload = tk.Button(root, text="Upload File", command=upload_file)
+
+# Create frames for better organization
+upload_frame = ctkt.CTkFrame(master=root)
+upload_frame.pack(pady=10)
+
+process_frame = ctkt.CTkFrame(master=root)
+process_frame.pack(pady=10)
+
+
+# GUI Components - Upload Frame
+btn_upload = ctkt.CTkButton(master=upload_frame, text="Upload File", command=upload_file)
 btn_upload.pack(pady=10)
 
-lbl_file = tk.Label(root, text="No files uploaded", wraplength=300)
+lbl_file = ctkt.CTkLabel(master=upload_frame, text="No files uploaded", wraplength=300)
 lbl_file.pack()
 
-lbl_column = tk.Label(root, text="Unique Identifier Column (e.g., ID or Name):")
+
+# GUI Components - Process frame
+lbl_column = ctkt.CTkLabel(master=process_frame, text="Unique Identifier Column (e.g., ID or Name):")
 lbl_column.pack(pady=5)
 
-entry_column = tk.Entry(root)
+entry_column = ctkt.CTkEntry(master=process_frame, width=200)
 entry_column.pack()
 
-btn_process = tk.Button(root, text="Process Files", command=process_files)
+btn_process = ctkt.CTkButton(master=process_frame, text="Process Files", command=process_files)
 btn_process.pack(pady=10)
+
 
 root.mainloop()
