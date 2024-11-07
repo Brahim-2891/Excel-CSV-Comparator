@@ -1,5 +1,5 @@
 import customtkinter as ctkt  # Import CustomTkinter
-from customtkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox
 import pandas as pd
 
 # Initialize GUI
@@ -16,7 +16,7 @@ def upload_file():
     filepath = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx"), ("CSV files", "*.csv")])
     if filepath:
         file_paths.append(filepath)
-        lbl_file.config(text="\n".join(file_paths))
+        lbl_file.configure(text="\n".join(file_paths))
 
 
 # Function to process and compare files
